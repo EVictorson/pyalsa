@@ -13,10 +13,11 @@ import alsaaudio as aa
 import sys
 
 def usage():
-        print 'usage: mic_record.py -n <num_channels> -f <file> -c <card>'
+        print 'usage: mic_record.py -n <num_channels> -f <file> -c <card> -v (optional)'
 	print '-n: number of microphones recording from'
 	print '-f: file to save wave file to'
 	print '-c: enumeration of card reading mic data from (0 is default, 1 is second card detected, etc)'
+	print '-v: verbose, print out mean data on channel 1 as being recorded'
         file = sys.stderr
         sys.exit(2)
 
