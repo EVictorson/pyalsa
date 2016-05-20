@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
-# https://rsmith.home.xs4all.nl/miscellaneous/filtering-a-sound-recording.html
+# simple visualization of data recorded from microphone array
+# tested with default microphone (PCH) and minidsp USBStreamer
+# with 4 I2S microphone array
 # sudo apt-get install pyalsaaudio
 
 import sys

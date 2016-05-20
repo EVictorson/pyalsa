@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-
-# example stolen from:
-# http://stackoverflow.com/questions/6867675/audio-recording-in-python
+# simple recording from alsaaudio to a wave file
+# testing done with the built in microphone (PCH)
+# and additional sound card (minidsp USBStreamer, using 4 I2S microphones)
 # sudo apt-get install pyalsaaudio
 
 import wave
