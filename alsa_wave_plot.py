@@ -15,8 +15,10 @@ import getopt
 import os
 
 def usage():
-    	print 'usage: wave_plot.py -n <num_channels> -f <file>'#, file=sys.stderr
-    	file = sys.stderr
+    	print 'usage: alsa_wave_plot.py -n <num_channels> -f <file>'
+    	print '-n: number of channels'
+	print '-f: file name to read from (expects a .wav)'
+	file = sys.stderr
 	sys.exit(2)
 
 def channel_plot(signal, num_channels):
@@ -114,6 +116,9 @@ def channel_plot(signal, num_channels):
 
 		
 		plt.show()
+
+		#TODO:
+		# add function for FFTs
 
 
 if __name__ == '__main__':
