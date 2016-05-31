@@ -97,7 +97,7 @@ def channel_plot(signal, num_channels):
         	plt.plot(x4, rear_right)
        		plt.xlabel('Sample Number')
        		plt.ylabel('Amplitude')
-        	plt.title('Rear Left Channel')
+        	plt.title('Rear Right Channel')
 
 	        plt.show()
 
@@ -114,7 +114,6 @@ def channel_plot(signal, num_channels):
 
 		plt.legend(handles = [ch1, ch2, ch3, ch4])
 
-		
 		plt.show()
 
 		#TODO:
@@ -135,5 +134,7 @@ if __name__ == '__main__':
 	data = wave.open(filename, 'rb')
 
 	signal = np.fromstring(data.readframes(-1), dtype=np.int16)
+	
+	print(len(signal))
 	
 	channel_plot(signal, num_channels)

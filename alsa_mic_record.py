@@ -49,27 +49,30 @@ card_info = {}
 for device_number, card_name in enumerate(aa.cards()):
     card_info[card_name] = "hw:%s,0" % device_number
 
-device = aa.PCM(device=card_info[card_id])
+
+#device = aa.PCM(device=card_info[card_id])
 
 # setup the alsa audio object
-inp = aa.PCM(aa.PCM_CAPTURE)
+inp = aa.PCM(aa.PCM_CAPTURE,device = card_info[card_id]) 
+#inp = aa.PCM(aa.PCM_CAPTURE, aa.PCM_NONBLOCK, card_info[card_id])
 inp.setchannels(num_channels)
 inp.setrate(data_rate)
 inp.setformat(aa.PCM_FORMAT_S16_LE)
-inp.setperiodsize(512)
+#inp.setperiodsize(512)
+inp.setperiodsize(128)
 
 w = wave.open(file_name, 'w')
-w.setnchannels(num_channels)
-w.setsampwidth(2)
-w.setframerate(data_rate)
+w.setnchannels(num_channels)  # number of channels
+w.setsampwidth(2)    # number of bytes per sample
+w.setframerate(data_rate)  
 
 while True:
     l, data = inp.read()
-    a = np.fromstring(data, dtype='int16')
-    if output_enable:
-        print np.abs(a).mean()
+    #a = np.fromstring(data, dtype='int16')
+    #if output_enable:
+     #   print np.abs(a).mean()
     # the below line will show the entire array
-    #print numpy.abs(a)
+    #print np.abs(a)
     w.writeframes(data)
 
 
