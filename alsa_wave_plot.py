@@ -78,6 +78,9 @@ def channel_plot(signal, num_channels):
 		plt.figure(2)
 		plt.plot(frq, Y)
 		plt.xlim(0,1000)
+		plt.title('Mono FFT')
+		plt.xlabel('Frequency (Hz)')
+		plt.ylabel('Magnitude')
 		plt.show()
 
 
