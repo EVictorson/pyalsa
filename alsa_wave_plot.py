@@ -21,6 +21,43 @@ def usage():
 	file = sys.stderr
 	sys.exit(2)
 
+def get_fft(signal):
+	rate = 44100.0
+
+        Ts = len(signal)/(rate)
+        n = len(signal)
+        k = np.arange(n)
+        T = n/rate
+        frq = k/T
+        frq = frq[range(n/2)]
+
+        Y = np.fft.fft(signal)/n
+        Y = abs(Y[range(n/2)])
+	return Y,frq
+
+
+def fft_plot(signal, num_channels):
+	rate = 44100.0
+
+        plt.figure()
+        Ts = len(signal)/(num_channels*rate)
+        n = len(signal)
+        k = np.arange(n)
+        T = n/rate
+        frq = k/T
+        frq = frq[range(n/2)]
+
+        Y = np.fft.fft(signal)/n
+        Y = Y[range(n/2)]
+
+        plt.plot(frq, abs(Y))
+        plt.xlim(0,1000)
+	plt.title('Single Channel FFT')
+	plt.xlabel('Frequency (Hz)')
+	plt.ylabel('Magnitude')
+	plt.show()
+
+
 def channel_plot(signal, num_channels):
 	
 	# assuming 44.1 kHz sampling
@@ -34,7 +71,16 @@ def channel_plot(signal, num_channels):
         	plt.xlabel('Sample Number')
         	plt.ylabel('Amplitude')
         	plt.title('Mono Mic Data')
-	
+		plt.show()	
+			
+		#fft_plot(signal, num_channels)
+		Y,frq = get_fft(signal)
+		plt.figure(2)
+		plt.plot(frq, Y)
+		plt.xlim(0,1000)
+		plt.show()
+
+
 	if num_channels == 2:
 	
         	left = signal[0::2]
@@ -62,7 +108,26 @@ def channel_plot(signal, num_channels):
 		plt.xlabel('Time (s)')
 		plt.ylabel('Amplitude')
 		plt.show()
-		
+
+		plt.figure(3)
+		Y1, frq1 = get_fft(left)
+		Y2, frq2  = get_fft(right)
+
+		plt.subplot(1,2,1)
+		plt.plot(frq1, Y1)
+		plt.xlabel('Frequency (Hz)')
+		plt.ylabel('Magnitude')
+		plt.title('Left FFT')
+		plt.xlim(0,2000)
+
+		plt.subplot(1,2,2)
+		plt.plot(frq2, Y2)
+		plt.title('Right FFT')
+		plt.xlabel('Frequency (Hz)')
+		plt.ylabel('Magnitude')
+		plt.xlim(0,2000)
+		plt.show()
+
 	
 	if num_channels == 4:	
         	left = signal[0::4]
@@ -118,6 +183,42 @@ def channel_plot(signal, num_channels):
 
 		#TODO:
 		# add function for FFTs
+
+                plt.figure(3)
+                Y1, frq1 = get_fft(left)
+                Y2, frq2 = get_fft(right)
+		Y3, frq3 = get_fft(rear_left)
+		Y4, frq4 = get_fft(rear_right)
+
+                plt.subplot(2,2,1)
+                plt.plot(frq1, Y1)
+                plt.xlabel('Frequency (Hz)')
+                plt.ylabel('Magnitude')
+                plt.title('Left FFT')
+                plt.xlim(0,2000)
+
+                plt.subplot(2,2,2)
+                plt.plot(frq2, Y2)
+                plt.title('Right FFT')
+                plt.xlabel('Frequency (Hz)')
+                plt.ylabel('Magnitude')
+                plt.xlim(0,2000)
+                
+		plt.subplot(2,2,3)
+                plt.plot(frq3, Y3)
+                plt.xlabel('Frequency (Hz)')
+                plt.ylabel('Magnitude')
+                plt.title('Rear Left FFT')
+                plt.xlim(0,2000)
+
+                plt.subplot(2,2,4)
+                plt.plot(frq4, Y4)
+                plt.title('Rear Right FFT')
+                plt.xlabel('Frequency (Hz)')
+                plt.ylabel('Magnitude')
+                plt.xlim(0,2000)
+
+		plt.show()
 
 
 if __name__ == '__main__':
