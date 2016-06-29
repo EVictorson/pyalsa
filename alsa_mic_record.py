@@ -47,10 +47,9 @@ print aa.cards()
 # set the audio card accordingly
 card_info = {}
 for device_number, card_name in enumerate(aa.cards()):
-    card_info[card_name] = "hw:%s,0" % device_number
-
-
-#device = aa.PCM(device=card_info[card_id])
+    card_info[card_name] = "plughw:%s,0" % device_number
+    print device_number
+    print card_name
 
 # setup the alsa audio object
 inp = aa.PCM(aa.PCM_CAPTURE,device = card_info[card_id]) 

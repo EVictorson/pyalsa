@@ -18,6 +18,7 @@ def usage():
     	print 'usage: alsa_wave_plot.py -n <num_channels> -f <file>'
     	print '-n: number of channels'
 	print '-f: file name to read from (expects a .wav)'
+	print '-s: True or False to save raw values to text file'
 	file = sys.stderr
 	sys.exit(2)
 
@@ -36,7 +37,7 @@ def get_fft(signal):
 	return Y,frq
 
 
-def fft_plot(signal, num_channels):
+def fft_plot(signal, num_channels, xlim):
 	rate = 44100.0
 
         plt.figure()
@@ -49,16 +50,29 @@ def fft_plot(signal, num_channels):
 
         Y = np.fft.fft(signal)/n
         Y = Y[range(n/2)]
-
+	
+	plt.figure()
         plt.plot(frq, abs(Y))
-        plt.xlim(0,1000)
+        plt.xlim(0,xlim)
 	plt.title('Single Channel FFT')
 	plt.xlabel('Frequency (Hz)')
 	plt.ylabel('Magnitude')
 	plt.show()
+	'''
+	plt.figure()
+	plt.plot(frq, abs(Y))
+	plt.xlim(0,100)
+	plt.title('Single Channel FFT zoomed')
+	plt.xlabel('Frequency (Hz)')
+	plt.ylabel('Magnitude')
+	plt.show()
+	'''
 
+def save_raw_vals(signal):
+	np.savetxt('raw_values_ch1.txt', signal, delimiter=" ", fmt='%f')
+	print('Saving raw values to raw_values_ch1.txt...')
 
-def channel_plot(signal, num_channels):
+def channel_plot(signal, num_channels, save_raw):
 	
 	# assuming 44.1 kHz sampling
 	rate = 44100.0
@@ -82,6 +96,21 @@ def channel_plot(signal, num_channels):
 		plt.xlabel('Frequency (Hz)')
 		plt.ylabel('Magnitude')
 		plt.show()
+
+
+		plt.figure(3)
+		plt.plot(frq, Y)
+		plt.xlim(0,100)
+		plt.title('Mono FFT Zoomed')
+		plt.xlabel('Frequency (Hz)')
+		plt.ylabel('Magnitude')
+		plt.show()
+		
+		if(save_raw==1):
+			save_raw_vals(signal)
+
+		std_dev = np.std(x, ddof=1)
+		print('std dev = %f' %std_dev)
 
 
 	if num_channels == 2:
@@ -121,14 +150,35 @@ def channel_plot(signal, num_channels):
 		plt.xlabel('Frequency (Hz)')
 		plt.ylabel('Magnitude')
 		plt.title('Left FFT')
-		plt.xlim(0,2000)
+		plt.xlim(0,1000)
 
 		plt.subplot(1,2,2)
 		plt.plot(frq2, Y2)
 		plt.title('Right FFT')
 		plt.xlabel('Frequency (Hz)')
 		plt.ylabel('Magnitude')
-		plt.xlim(0,2000)
+		plt.xlim(0,1000)
+		plt.show()
+
+		std_dev_l = np.std(left, ddof=1)
+		std_dev_r = np.std(right, ddof=1)
+		print('left std dev = %f' %std_dev_l)
+		print('right std dev = %f' %std_dev_r)
+
+		plt.figure()
+		plt.subplot(1,2,1)
+		plt.plot(frq1, Y1)
+		plt.title('Left FFT Zoomed')
+		plt.xlabel('Frequency (Hz)')
+		plt.ylabel('Magnitude')
+		plt.xlim(0,100)
+		
+		plt.subplot(1,2,2)
+		plt.plot(frq2, Y2)
+		plt.title('Right FFT Zoomed')
+		plt.xlabel('Frequency (Hz)')
+		plt.ylabel('Magnitude')
+		plt.xlim(0,100)
 		plt.show()
 
 	
@@ -226,12 +276,14 @@ def channel_plot(signal, num_channels):
 
 if __name__ == '__main__':
 
-	opts, args = getopt.getopt(sys.argv[1:], 'n:f:')
+	opts, args = getopt.getopt(sys.argv[1:], 'n:f:s:')
     	for o, a in opts:
 	      	if o == '-n':
             		num_channels = int(a)
 		elif o == '-f':
 			filename = os.getcwd() + '/' +a
+		elif o == '-s':
+			save_raw = a
 	if not opts:
 		usage()
 
@@ -240,5 +292,6 @@ if __name__ == '__main__':
 	signal = np.fromstring(data.readframes(-1), dtype=np.int16)
 	
 	print(len(signal))
-	
-	channel_plot(signal, num_channels)
+
+	save_raw = 0	
+	channel_plot(signal, num_channels, save_raw)
